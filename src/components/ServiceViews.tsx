@@ -8,12 +8,10 @@ import {
   Share2,
   Globe,
   Workflow,
-  CalendarCheck,
   Video,
   Play,
   CheckCircle2,
   ArrowRight,
-  Download,
   Layers,
   TrendingUp,
   Maximize2,
@@ -143,7 +141,7 @@ function AIGeneratorSubroutes({ subrouteId, service }: { subrouteId: string; ser
 
     try {
       const apiKey = process.env.GEMINI_API_KEY;
-      if (apiKey) {
+      if (apiKey && apiKey.trim() !== '') {
         const ai = new GoogleGenAI({ apiKey });
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
@@ -155,7 +153,7 @@ function AIGeneratorSubroutes({ subrouteId, service }: { subrouteId: string; ser
           image: getMockBlueprintImage(devType)
         });
       } else {
-        throw new Error('No API Key');
+        throw new Error('No API Key configured');
       }
     } catch {
       setResult({
