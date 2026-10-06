@@ -128,6 +128,9 @@ function renderSubrouteContent(serviceId: string, subrouteId: string, service: S
   }
 }
 
+/* ========================================================================== */
+/* SERVICE 1: AI GENERATOR (100% SAFE CLIENT MOCK/SIMULATOR)                  */
+/* ========================================================================== */
 function AIGeneratorSubroutes({ subrouteId, service }: { subrouteId: string; service: ServiceDefinition }) {
   const [width, setWidth] = useState('25');
   const [length, setLength] = useState('40');
@@ -135,35 +138,15 @@ function AIGeneratorSubroutes({ subrouteId, service }: { subrouteId: string; ser
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<{ prompt: string; image: string } | null>(null);
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     setIsGenerating(true);
-
-    // Dynamic import to prevent client-side initialization crash if SDK is absent
-    try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (apiKey && apiKey.trim() !== '') {
-        const { GoogleGenAI } = await import('@google/genai');
-        const ai = new GoogleGenAI({ apiKey });
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: `Actúa como arquitecto e ingeniero inmobiliario. Genera un prompt descriptivo en inglés y español para Midjourney/Sora para un desarrollo tipo "${devType}" de terreno ${width}m de frente por ${length}m de fondo con especificaciones LOD BMI.`,
-        });
-        const promptText = response.text || '';
-        setResult({
-          prompt: promptText.trim(),
-          image: getMockBlueprintImage(devType)
-        });
-      } else {
-        throw new Error('No API Key configured');
-      }
-    } catch {
+    setTimeout(() => {
       setResult({
-        prompt: `Cinematic 8k architectural exterior shot of a luxury ${devType.toUpperCase()} development built on a ${width}x${length}m plot. Biophilic design, floor-to-ceiling glass balconies, ambient dusk illumination, hyper-realistic renders, LOD 400 BMI specs --ar 16:9 --v 6.0`,
+        prompt: `Cinematic 8k architectural exterior shot of a luxury ${devType.toUpperCase()} development built on a ${width}x${length}m plot. Biophilic facade with glass balconies, warm dusk illumination, hyper-realistic renders, LOD 400 BMI specs --ar 16:9 --v 6.0`,
         image: getMockBlueprintImage(devType)
       });
-    } finally {
       setIsGenerating(false);
-    }
+    }, 600);
   };
 
   function getMockBlueprintImage(type: string) {
