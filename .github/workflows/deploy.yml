@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -39,7 +39,13 @@ jobs:
       - name: Create 404 Fallback
         run: cp dist/index.html dist/404.html
 
-      - name: Setup Pages
+      - name: Deploy to gh-pages branch (for Branch deployment mode)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
+      - name: Setup Pages (for Actions deployment mode)
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
@@ -47,6 +53,6 @@ jobs:
         with:
           path: './dist'
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages Action
         id: deployment
         uses: actions/deploy-pages@v4
