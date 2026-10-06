@@ -8,10 +8,14 @@ export default defineConfig(({ mode }) => {
   const apiKey = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
 
   return {
-    base: './', // Rutas relativas obligatorias para GitHub Pages subpath (https://recordis-dev.github.io/HuayraDrone/)
+    base: './', // Rutas relativas obligatorias para GitHub Pages subpath
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(apiKey),
+      'process.env': JSON.stringify({
+        GEMINI_API_KEY: apiKey
+      }),
+      'global': 'globalThis',
     },
     resolve: {
       alias: {
