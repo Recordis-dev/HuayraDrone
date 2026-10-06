@@ -36,8 +36,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Create 404 Fallback
-        run: cp dist/index.html dist/404.html
+      - name: Create .nojekyll & 404 Fallback
+        run: |
+          touch dist/.nojekyll
+          cp dist/index.html dist/404.html
 
       - name: Deploy to gh-pages branch (for Branch deployment mode)
         uses: peaceiris/actions-gh-pages@v4
