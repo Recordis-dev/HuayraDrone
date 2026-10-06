@@ -8,12 +8,10 @@ import {
   Share2,
   Globe,
   Workflow,
-  CalendarCheck,
   Video,
   Play,
   CheckCircle2,
   ArrowRight,
-  Download,
   Layers,
   TrendingUp,
   Maximize2,
@@ -21,7 +19,6 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { ServiceDefinition } from '../data/servicesData';
-import { GoogleGenAI } from '@google/genai';
 
 interface ServiceViewProps {
   service: ServiceDefinition;
@@ -141,9 +138,11 @@ function AIGeneratorSubroutes({ subrouteId, service }: { subrouteId: string; ser
   const handleGenerate = async () => {
     setIsGenerating(true);
 
+    // Dynamic import to prevent client-side initialization crash if SDK is absent
     try {
       const apiKey = process.env.GEMINI_API_KEY;
-      if (apiKey) {
+      if (apiKey && apiKey.trim() !== '') {
+        const { GoogleGenAI } = await import('@google/genai');
         const ai = new GoogleGenAI({ apiKey });
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
@@ -155,7 +154,7 @@ function AIGeneratorSubroutes({ subrouteId, service }: { subrouteId: string; ser
           image: getMockBlueprintImage(devType)
         });
       } else {
-        throw new Error('No API Key');
+        throw new Error('No API Key configured');
       }
     } catch {
       setResult({
